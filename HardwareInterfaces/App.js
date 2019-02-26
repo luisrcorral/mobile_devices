@@ -1,18 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import { StyleSheet, View, Button, Vibration } from 'react-native';
+import { createAppContainer } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { BottomNavigation } from 'react-native-paper';
 import GyroscopeInterface from './screens/Gyroscope';
 import CameraInterface from './screens/Camera';
 
-// Home screen
-class HomeScreen extends React.Component {
+const DURATION = 1000; // Duration in ms.
+
+class VibrationInterface extends React.Component {
   render() {
     return (
       <View style={ styles.container }>
-        <Text style={ styles.title }>Hardware Interfaces</Text>
-        <Text>Use the tabs below to move between screens.</Text>
+        <Button
+          title="Vibrate"
+          onPress={() => Vibration.vibrate(DURATION)} // Vibrate for the specified duration. In iOS you can't modify the duration, its always 500ms.
+        />
       </View>
     );
   }
@@ -31,13 +33,13 @@ const styles = StyleSheet.create({
   },
 });
 
-// Stack of screens in a Bottom Tab navigator
+// Stack of screens in a Material Bottom Tab navigator
 const TabNavigator = createMaterialBottomTabNavigator({
-  Home: HomeScreen,
+  Vibration: VibrationInterface,
   Gyroscope: GyroscopeInterface,
   Camera: CameraInterface
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Vibration',
   activeColor: '#f0edf6',
   inactiveColor: '#738290',
   barStyle: { backgroundColor: '#15181B' },

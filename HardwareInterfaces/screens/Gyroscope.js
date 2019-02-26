@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { Gyroscope } from 'expo';
 
 const Value = ({name, value}) => (
@@ -11,9 +11,10 @@ const Value = ({name, value}) => (
 
 export default class GyroscopeInterface extends React.Component {
     state = {
-      gyroscopeData: {},
+      gyroscopeData: {}, // Storage for the gyroscope data.
     }
   
+    // Start the subscription
     componentDidMount(){
       this._toggle();
     }
@@ -22,6 +23,7 @@ export default class GyroscopeInterface extends React.Component {
       this._unsubscribe();
     }
   
+    // function to toggle on or off.
     _toggle = () => {
       if (this._subscription) {
         this._unsubscribe();
@@ -30,20 +32,14 @@ export default class GyroscopeInterface extends React.Component {
       }
     }
   
-    _slow = () => {
-      Gyroscope.setUpdateInterval(1000); 
-    }
-  
-    _fast = () => {
-      Gyroscope.setUpdateInterval(16);
-    }
-  
+    // Subscribe for updates to the gyroscope.
     _subscribe = () => {
-      this._subscription = Gyroscope.addListener(gyroscopeData => {
+      this._subscription = Gyroscope.addListener(gyroscopeData => { // callback that is invoked when a gyroscope update is available.
         this.setState({ gyroscopeData });
       });
     }
   
+    // Unsubscribe the listener.
     _unsubscribe = () => {
       this._subscription && this._subscription.remove();
       this._subscription = null;
@@ -54,13 +50,26 @@ export default class GyroscopeInterface extends React.Component {
   
       return (
         <View style={styles.container}>
-          <Text>Gyroscope</Text>
-          <Value name="x" value={x} />
-          <Value name="y" value={y} />
-          <Value name="z" value={z} />
+          <Value name="x" value={ round(x) } />
+          <Value name="y" value={ round(y) } />
+          <Value name="z" value={ round(z) } />
+          <View>
+            <Button
+              title="Toggle"
+              onPress={ this._toggle }
+            />
+          </View>
         </View>
       );
     }
+  }
+
+  // Round the values to two decimals.
+  function round(n) {
+    if (!n) {
+      return 0;
+    }
+    return Math.floor(n * 100) / 100;
   }
 
   const styles = StyleSheet.create({
